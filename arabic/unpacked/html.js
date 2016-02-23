@@ -53,22 +53,44 @@ MathJax.Hub.Register.StartupHook('mml Jax Ready', function () {
         }
       };
 
-      var miToHTML = MML.mi.prototype.toHTML;
-      MML.mi.Augment({
-        toHTML: function (span) {
+      //MathJax.Hub.Register.StartupHook("HTML-CSS mtable Ready", function () {
+      //  // Special case for the `mtable` element
+      //  ['mtable', 'mtd'].forEach(function (name) {
+      //    var originalToHTML = MML[name].prototype.toHTML;
+      //
+      //    MML[name].Augment({
+      //      toHTML: function (span) {
+      //        var element = originalToHTML.apply(this, [span]);
+      //        console.log('element', element);
+      //
+      //        flipHorizontalElement(this, element);
+      //        return element;
+      //      }
+      //    });
+      //  });
+      //});
 
-          var element = miToHTML.apply(this, [span]);
+       // Special case for the `mi` element
+      ['mi'].forEach(function (name) {
+        var originalToHTML = MML[name].prototype.toHTML;
 
-          if (Node.TEXT_NODE === element.firstChild.nodeType) {
-            flipHorizontalElement(this, element);
-          } else {
-            flipHorizontalElement(this, element.firstChild);
+        MML[name].Augment({
+          toHTML: function (span) {
+
+            var element = originalToHTML.apply(this, [span]);
+
+            if (Node.TEXT_NODE === element.firstChild.nodeType) {
+              flipHorizontalElement(this, element);
+            } else {
+              flipHorizontalElement(this, element.firstChild);
+            }
+
+            return element;
           }
-
-          return element;
-        }
+        });
       });
 
+      // Treat the others normally
       ['mn', 'mo', 'mtext', 'msubsup', 'mrow', 'mfrac'].forEach(function (name) {
         var originalToHTML = MML[name].prototype.toHTML;
 

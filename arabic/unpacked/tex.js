@@ -132,7 +132,7 @@ MathJax.Hub.Register.StartupHook('Arabic TeX Startup', function () {
         var parsedToken = texParseMMLToken.apply(this, [token]);
 
         if ('ar' === this.stack.env.lang) {
-          if ('mn' === token.type) {
+          if ('mn' === parsedToken.type) {
             return this.arabicNumber(parsedToken);
           } else if ('mi' === parsedToken.type) {
             return this.arabicIdentifier(parsedToken);
@@ -151,6 +151,8 @@ MathJax.Hub.Register.StartupHook('Arabic TeX Startup', function () {
         this.stack.env.lang = 'ar';
 
         var arg = this._getArgumentMML(name);
+
+        console.log('arg marasarabic', arg);
 
         this.Push(this.flipHorizontal(arg).With({
           lang: 'ar'
